@@ -19,7 +19,7 @@ torch.manual_seed(2020)
 TYPE_NUM = 20
 
 if __name__ == '__main__':
-    batch_size = 16
+    batch_size = 2
     train_dataset = MfiDataset(root_dir='./data/train/',
                         names_file='./data/train/train.csv',transform=ToTensor())
     test_dataset = MfiDataset(root_dir='./data/test/',
@@ -36,7 +36,7 @@ if __name__ == '__main__':
     optim = Adam(model.parameters(), lr=0.001, betas=(0.9,0.999), eps=1e-08, weight_decay=0) # adam 不需要动态修改学习率
     
     cross_error = CrossEntropyLoss()
-    epoch = 2
+    epoch = 150
 
     print("set learning rate")
     print(optim.param_groups[0]['lr'])
