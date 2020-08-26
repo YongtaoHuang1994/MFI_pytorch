@@ -9,7 +9,7 @@ import cv2
 import torch
 from torch.utils.data import Dataset, DataLoader
 from torchvision.transforms import ToTensor, transforms
-from MfiData import MfiDataset
+from mfidata import MfiDataset
 
 torch.manual_seed(2020)
 
