@@ -9,7 +9,7 @@ import torch.nn.utils.prune as prune
 import torch.nn.functional as F
 from torch.utils.data import DataLoader
 from torchvision.transforms import ToTensor
-from MfiData import MfiDataset
+from mfidata import MfiDataset
 from utils import time_model_evaluation
 
 FILE_NAME = "mfi_0.96400.pth"
