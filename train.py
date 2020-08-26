@@ -19,7 +19,7 @@ torch.manual_seed(2020)
 TYPE_NUM = 20
 
 if __name__ == '__main__':
-    batch_size = 2
+    batch_size = 16
     train_dataset = MfiDataset(root_dir='./data/train/',
                         names_file='./data/train/train.csv',transform=ToTensor())
     test_dataset = MfiDataset(root_dir='./data/test/',
@@ -46,7 +46,7 @@ if __name__ == '__main__':
     for _epoch in range(epoch):
                 
         for idx, (train_x, train_label) in enumerate(train_loader):
-            train_x = train_x.unsqueeze(0)
+            train_x = train_x.unsqueeze(1)
             train_x = train_x.to(torch.float32)    # float32
             train_x = torch.div(train_x, 255)
             label_np = np.zeros((1, TYPE_NUM)) 
@@ -62,7 +62,7 @@ if __name__ == '__main__':
         _sum = 0
 
         for idx, (test_x, test_label) in enumerate(test_loader):
-            test_x = test_x.unsqueeze(0)
+            test_x = test_x.unsqueeze(1)
             test_x = test_x.to(torch.float32)    # float32
             test_x = torch.div(test_x, 255)
             predict_y = model(test_x.float()).detach()
