@@ -7,8 +7,7 @@ import cv2
 import torch
 from torch.optim import SGD, Adam, RMSprop
 from torch.utils.data import Dataset, DataLoader
-
-from MfiData import MfiDataset
+from mfidata import MfiDataset
 
 torch.manual_seed(2020)
 
