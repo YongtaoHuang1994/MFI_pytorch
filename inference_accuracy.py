@@ -13,10 +13,8 @@ from mfidata import MfiDataset
 
 torch.manual_seed(2020)
 
-RESULT = "data/train" # constellation source
-
-CUR_DIR = os.path.dirname(os.path.abspath(__file__))
-dir = os.path.join(CUR_DIR, RESULT)
+# FILE_NAME = "mfi_0.97400.pth"
+FILE_NAME = "quantized_1_model.pth"
 
 if __name__ == '__main__':
     batch_size = 1
@@ -24,7 +22,7 @@ if __name__ == '__main__':
                         names_file='./data/test/test.csv',transform=ToTensor())
     test_loader = DataLoader(test_dataset, batch_size=batch_size)
 
-    model = torch.load("./models/mfi_0.96400.pth")
+    model = torch.load("./models/"+FILE_NAME)
 
     result = list()
 

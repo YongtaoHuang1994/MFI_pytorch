@@ -12,7 +12,7 @@ from mfidata import MfiDataset
 from utils import time_model_evaluation, print_size_of_model
 
 
-FILE_NAME = "mfi_0.96400.pth"
+FILE_NAME = "mfi_0.97400.pth"
 QUANTIZATION_FILE_NAME = "quantized_1_model.pth"
 
 
@@ -27,12 +27,16 @@ if __name__ == '__main__':
     print("info of quantized_model: ")
     print(quantized_model)
 
+    print("==================================")
+
     # TODO calc size
-    print("original model size: ")
+    print("(1) original model size: ")
     print_size_of_model(model)
-    print("quantizedmodel modle size: ")
+    print("(2) quantized model modle size: ")
     print_size_of_model(quantized_model)
     torch.save(quantized_model, 'models/'+QUANTIZATION_FILE_NAME)
+
+    print("==================================")
 
     # TODO calc time
     torch.set_num_threads(1)
@@ -52,11 +56,12 @@ if __name__ == '__main__':
     images = images.to(torch.float32)    # float32
     images = torch.div(images, 255)
 
-    print("original model time cost: ")
+    print("(1) original model time cost: ")
     time_model_evaluation(model, images)
-    print("quantizedmodel time cost: ")
+    print("(2) quantized model time cost: ")
     time_model_evaluation(quantized_model, images)
 
+    print("==================================")
 
 
 
