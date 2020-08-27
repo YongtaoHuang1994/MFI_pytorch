@@ -13,24 +13,18 @@ from mfidata import MfiDataset
 
 torch.manual_seed(2020)
 
-# FILE_NAME = "mfi_0.97400.pth"
-FILE_NAME = "quantized_1_model.pth"
+FILE_NAME = "mfi_0.97400.pth"
+# FILE_NAME = "quantized_1_model.pth"
+# FILE_NAME = "pruning_1_model.pth"
 
-if __name__ == '__main__':
-    batch_size = 1
-    test_dataset = MfiDataset(root_dir='./data/test/',
-                        names_file='./data/test/test.csv',transform=ToTensor())
-    test_loader = DataLoader(test_dataset, batch_size=batch_size)
-
-    model = torch.load("./models/"+FILE_NAME)
-
+def infer_accuracy(model, test_loader):
+    model.eval()
     result = list()
-
     correct = 0
     _sum = 0
 
     for idx, (test_x, test_label) in enumerate(test_loader):
-        test_x = test_x.unsqueeze(0)
+        test_x = test_x.unsqueeze(1)
         test_x = test_x.to(torch.float32)    # float32
         test_x = torch.div(test_x, 255)
         predict_y = model(test_x.float()).detach()
@@ -50,3 +44,55 @@ if __name__ == '__main__':
     print('\n')
     dt = DataFrame(result)
     dt.to_csv('result.csv', header=None, index=None)
+
+def infer_one_sampele(model, images, labels):
+    model.eval()
+    print("labels: ")
+    print(labels)
+    predict_y = model(images.float()).detach()
+    print(predict_y)
+    predict_ys = np.argmax(predict_y, axis=-1)
+    print("predicted label: ")
+    print(predict_ys.numpy())
+
+def infer_one_sampele_V2(model, images, labels):
+    model.eval()
+    print("labels: ")
+    print(labels)
+    with torch.no_grad():
+        output = model.forward(images.float())
+        print("output: ")
+        print(output)
+        max_value, max_idx = torch.max(output, dim=1)
+        print("predicted label")
+        print(max_idx)
+
+
+if __name__ == '__main__':
+    batch_size = 16
+    test_dataset = MfiDataset(root_dir='./data/test/',
+                        names_file='./data/test/test.csv', transform=ToTensor())
+    test_loader = DataLoader(test_dataset, batch_size=batch_size)
+    model = torch.load("./models/"+FILE_NAME)
+
+    #infer_accuracy(model, test_loader)
+    
+    dataiter = iter(test_loader)
+    image, label = dataiter.next()
+    image, label = dataiter.next()
+    image, label = dataiter.next()
+    image = image.unsqueeze(0)
+
+    image = image.to(torch.float32)    # float32
+    image = torch.div(image, 255)
+
+    print("1=============================")
+
+    infer_one_sampele(model, image, label)
+
+    print("2=============================")
+
+    infer_one_sampele_V2(model, image, label)
+    
+    
+

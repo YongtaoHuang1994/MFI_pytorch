@@ -1,13 +1,12 @@
 # 训练脚本
 
-from model import LeNet5, LeNet5_Improved
+from model import LeNet5, LeNet5_Improved, LeNet5_Improved_V2
 import os
 import numpy as np
 import pandas as pd
 from pandas import DataFrame
 import cv2
 import torch
-from torchvision.datasets import mnist
 from torch.nn import CrossEntropyLoss
 from torch.optim import SGD, Adam, RMSprop
 from torch.utils.data import Dataset, DataLoader
@@ -28,7 +27,7 @@ if __name__ == '__main__':
     test_loader = DataLoader(test_dataset, batch_size=batch_size)
 
     #model = LeNet5()
-    model = LeNet5_Improved()
+    model = LeNet5_Improved_V2()
     
     # optim = SGD(model.parameters(), lr=1e-1) # sgd
     # optim = SGD(model.parameters(), lr=1e-1, momentum=0.9) # sgd_momentum 一般来说sgd_momentum都比sgd强
@@ -38,13 +37,11 @@ if __name__ == '__main__':
     cross_error = CrossEntropyLoss()
     epoch = 150
 
-    print("set learning rate")
-    print(optim.param_groups[0]['lr'])
-
     acc = np.zeros(epoch)
 
     for _epoch in range(epoch):
-                
+
+        # training        
         for idx, (train_x, train_label) in enumerate(train_loader):
             train_x = train_x.unsqueeze(1)
             train_x = train_x.to(torch.float32)    # float32
@@ -53,14 +50,13 @@ if __name__ == '__main__':
             optim.zero_grad()
             predict_y = model(train_x.float())
             _error = cross_error(predict_y, train_label.long())
-            if idx % 100 == 0:
-                print('idx: {}, _error: {}'.format(idx, _error))
             _error.backward()
             optim.step()
 
         correct = 0
         _sum = 0
 
+        # inference
         for idx, (test_x, test_label) in enumerate(test_loader):
             test_x = test_x.unsqueeze(1)
             test_x = test_x.to(torch.float32)    # float32
@@ -75,6 +71,7 @@ if __name__ == '__main__':
         print('This is epochs: {}'.format(_epoch))
         print('accuracy: {:.5f}'.format(correct / _sum))
         print('\n')
+
         torch.save(model, 'models/mfi_{:.5f}.pth'.format(correct / _sum))
         acc[_epoch] = correct / _sum
 

@@ -15,8 +15,6 @@ from utils import time_model_evaluation, print_size_of_model
 FILE_NAME = "mfi_0.97400.pth"
 QUANTIZATION_FILE_NAME = "quantized_1_model.pth"
 
-
-
 if __name__ == '__main__':
     model = torch.load("./models/"+FILE_NAME)
     print("info of model: ")
