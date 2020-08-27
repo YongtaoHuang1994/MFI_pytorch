@@ -17,12 +17,13 @@ torch.manual_seed(2020)
 FILE_NAME = "quantized_1_model.pth"
 
 if __name__ == '__main__':
-    batch_size = 1
+    batch_size = 16
     test_dataset = MfiDataset(root_dir='./data/test/',
                         names_file='./data/test/test.csv',transform=ToTensor())
     test_loader = DataLoader(test_dataset, batch_size=batch_size)
 
     model = torch.load("./models/"+FILE_NAME)
+    model.eval()
 
     result = list()
 
