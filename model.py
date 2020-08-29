@@ -16,7 +16,10 @@ class ConvBNReLU(torch.nn.Sequential):
 
 
 class LeNet5_Improved_V3(torch.nn.Module):
-     
+    '''
+    with BN and dropout
+    ConvBNRelu
+    '''
     def __init__(self):   
         super(LeNet5_Improved_V3, self).__init__()
         self.conv1 = torch.nn.Conv2d(in_channels=1, out_channels=6, kernel_size=5, stride=1, padding=2, bias=True)
@@ -50,6 +53,9 @@ class LeNet5_Improved_V3(torch.nn.Module):
 
 
 class LeNet5_Improved_V2(torch.nn.Module):
+    '''
+    with dropout but without BN
+    '''
      
     def __init__(self):   
         super(LeNet5_Improved_V2, self).__init__()
@@ -78,6 +84,9 @@ class LeNet5_Improved_V2(torch.nn.Module):
 
 
 class LeNet5_Improved(torch.nn.Module):
+    '''
+    with BN and dropout
+    '''
      
     def __init__(self):   
         super(LeNet5_Improved, self).__init__()
