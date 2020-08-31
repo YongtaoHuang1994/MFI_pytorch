@@ -21,8 +21,8 @@ if __name__ == '__main__':
     batch_size = 1
 
     '''
-    train_dataset = mnist.MNIST(root='./train', train=True, transform=ToTensor())
-    test_dataset = mnist.MNIST(root='./test', train=False, transform=ToTensor())
+    train_dataset = mnist.MNIST(root='./mnist/train', train=True, transform=ToTensor())
+    test_dataset = mnist.MNIST(root='./mnist/test', train=False, transform=ToTensor())
     '''
 
     train_dataset = MfiDataset(root_dir='./data/train/',
