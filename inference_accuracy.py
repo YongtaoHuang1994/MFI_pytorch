@@ -14,7 +14,7 @@ from mfidata import MfiDataset
 
 torch.manual_seed(2020)
 
-FILE_NAME = "mfi_0.50600.pth"
+FILE_NAME = "mfi_1.00.pth"
 # FILE_NAME = "quantized_1_model.pth"
 # FILE_NAME = "pruning_1_model.pth"
 
@@ -76,7 +76,7 @@ if __name__ == '__main__':
     test_loader = DataLoader(test_dataset, batch_size=batch_size)
     model = torch.load("./models/"+FILE_NAME)
 
-    #infer_accuracy(model, test_loader)
+    infer_accuracy(model, test_loader)
     
     dataiter = iter(test_loader)
     image, label = dataiter.next() # (1,28,28)

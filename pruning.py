@@ -12,7 +12,7 @@ from torchvision.transforms import ToTensor
 from mfidata import MfiDataset
 from utils import time_model_evaluation, print_size_of_model
 
-FILE_NAME = "mfi_0.97400.pth"
+FILE_NAME = "mfi_1.00.pth"
 PRUNING_FILE_NAME = "pruning_1_model.pth"
 
 if __name__ == '__main__':

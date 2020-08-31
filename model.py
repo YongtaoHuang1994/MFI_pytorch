@@ -14,7 +14,6 @@ class ConvBNReLU(torch.nn.Sequential):
             torch.nn.ReLU(inplace=False)
         )
 
-
 class LeNet5_Improved_V3(torch.nn.Module):
     '''
     with BN and dropout
@@ -51,7 +50,6 @@ class LeNet5_Improved_V3(torch.nn.Module):
             if type(m) == ConvBNReLU:
                 torch.quantization.fuse_modules(m, ['0', '1', '2'], inplace=True)
 
-
 class LeNet5_Improved_V2(torch.nn.Module):
     '''
     with dropout but without BN
@@ -80,8 +78,6 @@ class LeNet5_Improved_V2(torch.nn.Module):
         x = self.fc3(x)
         
         return x
-
-
 
 class LeNet5_Improved(torch.nn.Module):
     '''
@@ -115,7 +111,7 @@ class LeNet5_Improved(torch.nn.Module):
         return x
 
 class LeNet5(torch.nn.Module):
-     
+    """最原始的LeNet5, 没有BN和dropout""" 
     def __init__(self):   
         super(LeNet5, self).__init__()
         self.conv1 = torch.nn.Conv2d(in_channels=1, out_channels=6, kernel_size=5, stride=1, padding=2, bias=True)
@@ -124,7 +120,7 @@ class LeNet5(torch.nn.Module):
         self.max_pool_2 = torch.nn.MaxPool2d(kernel_size=2)
         self.fc1 = torch.nn.Linear(16*5*5, 120)
         self.fc2 = torch.nn.Linear(120, 84) 
-        self.fc3 = torch.nn.Linear(84, 10)
+        self.fc3 = torch.nn.Linear(84, 5) # (84, 10)
         
     def forward(self, x):
         x = torch.nn.functional.relu(self.conv1(x))
@@ -138,5 +134,35 @@ class LeNet5(torch.nn.Module):
         
         return x
 
+class Model(torch.nn.Module):
+    def __init__(self):
+        super(Model, self).__init__()
+        self.conv1 = torch.nn.Conv2d(in_channels=1, out_channels=20, kernel_size=5, bias=False)
+        self.bn1 = torch.nn.BatchNorm2d(num_features=20)
+        self.pool1 = torch.nn.MaxPool2d(kernel_size=2, stride=2)
+        self.conv2 = torch.nn.Conv2d(in_channels=20, out_channels=50, kernel_size=5, bias=False)
+        self.bn2 = torch.nn.BatchNorm2d(num_features=50)
+        self.pool2 = torch.nn.MaxPool2d(kernel_size=2, stride=2)
+        self.fc1 = torch.nn.Linear(in_features=50 * 4 * 4, out_features=500, bias=False)
+        self.bn3 = torch.nn.BatchNorm1d(num_features=500)
+        #self.fc2 = torch.nn.Linear(in_features=500, out_features=10, bias=True)
+
+    def forward(self, x):
+        x = self.conv1(x)
+        x = self.bn1(x)
+        x = F.relu(x)
+        x = self.pool1(x)
+
+        x = self.conv2(x)
+        x = self.bn2(x)
+        x = F.relu(x)
+        x = self.pool2(x)
+
+        x = x.view(-1, 4 * 4 * 50)
+
+        x = self.fc1(x)
+        x = self.bn3(x)
+        x = F.relu(x)
+        return x
 
 
