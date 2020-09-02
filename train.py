@@ -1,4 +1,5 @@
 # 训练脚本
+# 20分类 torch.manual_seed(2020) batch_size = 128 epoch = 200 能训练出0.99
 
 from model import LeNet5, LeNet5_Improved, LeNet5_Improved_V2, LeNet5_Improved_V3
 import os
@@ -15,10 +16,11 @@ from mfidata import MfiDataset
 from torchvision.datasets import mnist
 from tensorboardX import SummaryWriter
 
+torch.manual_seed(2020)
 TYPE_NUM = 20
 
 if __name__ == '__main__':
-    batch_size = 1
+    batch_size = 128
 
     '''
     train_dataset = mnist.MNIST(root='./mnist/train', train=True, transform=ToTensor())
@@ -41,8 +43,7 @@ if __name__ == '__main__':
     optim = Adam(model.parameters(), lr=0.001, betas=(0.9,0.999), eps=1e-08, weight_decay=0) # adam 不需要动态修改学习率
     
     cross_error = CrossEntropyLoss()
-    epoch = 60
-
+    epoch = 200
 
     w_graph = SummaryWriter('tfboard/graph')
     w_acc = SummaryWriter('tfboard/acc')
@@ -50,12 +51,9 @@ if __name__ == '__main__':
     w_graph.add_graph(model,(input,))
 
     for _epoch in range(epoch):
+        print("This is epoch ", _epoch)
         model.train()
         for idx, (train_x, train_label) in enumerate(train_loader):
-
-            train_x = train_x.unsqueeze(1)
-            train_x = train_x.to(torch.float32)    # float32
-            train_x = torch.div(train_x, 255)
             label_np = np.zeros((train_label.shape[0], 10))
             optim.zero_grad()
             predict_y = model(train_x.float())
@@ -70,11 +68,7 @@ if __name__ == '__main__':
 
         model.eval()
         for idx, (test_x, test_label) in enumerate(test_loader):
-
-            test_x = test_x.unsqueeze(1)
-            test_x = test_x.to(torch.float32)    # float32
-            test_x = torch.div(test_x, 255)
-            
+        
             predict_y = model(test_x.float()).detach()
             predict_ys = np.argmax(predict_y, axis=-1)
             #label_np = test_label.numpy()
@@ -83,6 +77,6 @@ if __name__ == '__main__':
             _sum += _.shape[0]
 
         w_acc.add_scalar('Train/Acc', correct/_sum, _epoch)
-        print('accuracy: {:.2f}'.format(correct / _sum))
-        torch.save(model, 'models/mfi_{:.2f}.pth'.format(correct / _sum))
+        print('accuracy: {:.5f}'.format(correct / _sum))
+        torch.save(model, 'models/mfi_20_{:.5f}.pth'.format(correct / _sum))
         
