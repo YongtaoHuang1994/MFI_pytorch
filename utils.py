@@ -9,7 +9,9 @@ def print_size_of_model(model):
     os.remove('temp.p')
 
 def time_model_evaluation(model, test_data):
+    torch.set_num_threads(1)
     s = time.time()
-    output = model.forward(test_data)
+    for i in range(1000):
+        output = model.forward(test_data)
     elapsed = time.time() - s
     print('elapsed time (seconds): ', elapsed)

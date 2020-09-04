@@ -4,6 +4,7 @@ from torch.utils.data import Dataset
 from torchvision.transforms import ToTensor
 import os
 import cv2
+import numpy as np
 
 class MfiDataset(Dataset):
 
@@ -31,6 +32,10 @@ class MfiDataset(Dataset):
             return None
         image = cv2.imread(image_path)
         image = cv2.cvtColor(image,cv2.COLOR_BGR2GRAY)
+        image = image/255
+        # print(type(image))
+        # print(image.shape)
+        image = image[np.newaxis, :, :]
         label = int(self.names_list[idx].split(',')[1])
         sample = [image, label]
         #print(sample)
